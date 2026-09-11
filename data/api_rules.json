@@ -1,0 +1,945 @@
+[
+  {
+    "signature": "Landroid/telephony/TelephonyManager;->getDeviceId",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads IMEI/MEID - unique device identifier",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/telephony/TelephonyManager;->getImei",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads IMEI (API 26+)",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/telephony/TelephonyManager;->getMeid",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads MEID (API 26+)",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/telephony/TelephonyManager;->getSubscriberId",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads IMSI - subscriber identity",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/telephony/TelephonyManager;->getSimSerialNumber",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads SIM serial number",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/telephony/TelephonyManager;->getLine1Number",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads phone number",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/provider/Settings$Secure;->getString",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads Android ID from Settings.Secure",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/provider/Settings$System;->getString",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Reads system settings (may include device info)",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/os/Build;->SERIAL",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Accesses hardware serial number",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/os/Build;->getSerial",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Gets hardware serial (API 26+)",
+    "permissions": [
+      "READ_PHONE_STATE"
+    ]
+  },
+  {
+    "signature": "Ljava/net/NetworkInterface;->getHardwareAddress",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Reads MAC address via NetworkInterface",
+    "permissions": [
+      "ACCESS_WIFI_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/net/wifi/WifiInfo;->getMacAddress",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Reads WiFi MAC address",
+    "permissions": [
+      "ACCESS_WIFI_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/bluetooth/BluetoothAdapter;->getAddress",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Reads Bluetooth MAC address",
+    "permissions": [
+      "BLUETOOTH"
+    ]
+  },
+  {
+    "signature": "Landroid/location/LocationManager;->getLastKnownLocation",
+    "category": "location",
+    "severity": "high",
+    "description": "Gets last known GPS/network location",
+    "permissions": [
+      "ACCESS_FINE_LOCATION",
+      "ACCESS_COARSE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Landroid/location/LocationManager;->requestLocationUpdates",
+    "category": "location",
+    "severity": "high",
+    "description": "Registers for continuous location updates",
+    "permissions": [
+      "ACCESS_FINE_LOCATION",
+      "ACCESS_COARSE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Lcom/google/android/gms/location/FusedLocationProviderClient;->getLastLocation",
+    "category": "location",
+    "severity": "high",
+    "description": "Google Play Services: get last location",
+    "permissions": [
+      "ACCESS_FINE_LOCATION",
+      "ACCESS_COARSE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Lcom/google/android/gms/location/FusedLocationProviderClient;->requestLocationUpdates",
+    "category": "location",
+    "severity": "high",
+    "description": "Google Play Services: request location updates",
+    "permissions": [
+      "ACCESS_FINE_LOCATION",
+      "ACCESS_COARSE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Lcom/baidu/location/BDLocation;->getLatitude",
+    "category": "location",
+    "severity": "high",
+    "description": "Baidu Location SDK: reads latitude",
+    "permissions": [
+      "ACCESS_FINE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Lcom/amap/api/location/AMapLocation;->getLatitude",
+    "category": "location",
+    "severity": "high",
+    "description": "Amap/高德 Location SDK: reads latitude",
+    "permissions": [
+      "ACCESS_FINE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Lcom/tencent/map/geolocation/TencentLocation;->getLatitude",
+    "category": "location",
+    "severity": "high",
+    "description": "Tencent Location SDK: reads latitude",
+    "permissions": [
+      "ACCESS_FINE_LOCATION"
+    ]
+  },
+  {
+    "signature": "Landroid/provider/ContactsContract$Contacts;->query",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Queries contacts database",
+    "permissions": [
+      "READ_CONTACTS"
+    ]
+  },
+  {
+    "signature": "Landroid/content/ContentResolver;->query",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Generic content resolver query (may access contacts, SMS, call log)",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/telephony/SmsManager;->sendTextMessage",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Sends SMS message",
+    "permissions": [
+      "SEND_SMS"
+    ]
+  },
+  {
+    "signature": "Landroid/telephony/SmsManager;->sendMultipartTextMessage",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Sends multipart SMS",
+    "permissions": [
+      "SEND_SMS"
+    ]
+  },
+  {
+    "signature": "Landroid/provider/Telephony$Sms;->query",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads SMS inbox",
+    "permissions": [
+      "READ_SMS"
+    ]
+  },
+  {
+    "signature": "Landroid/provider/CallLog$Calls;->query",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Reads call log",
+    "permissions": [
+      "READ_CALL_LOG"
+    ]
+  },
+  {
+    "signature": "Landroid/app/admin/DevicePolicyManager;->getWifiMacAddress",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Device admin reading WiFi MAC",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/hardware/Camera;->open",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Opens camera (legacy API)",
+    "permissions": [
+      "CAMERA"
+    ]
+  },
+  {
+    "signature": "Landroid/hardware/camera2/CameraManager;->openCamera",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Opens camera (Camera2 API)",
+    "permissions": [
+      "CAMERA"
+    ]
+  },
+  {
+    "signature": "Landroid/media/MediaRecorder;->start",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Starts audio/video recording",
+    "permissions": [
+      "RECORD_AUDIO",
+      "CAMERA"
+    ]
+  },
+  {
+    "signature": "Landroid/media/AudioRecord;->startRecording",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Starts audio recording",
+    "permissions": [
+      "RECORD_AUDIO"
+    ]
+  },
+  {
+    "signature": "Ljava/lang/Class;->forName",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Dynamic class loading via reflection",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/Class;->getMethod",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Reflection: gets method by name",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/Class;->getDeclaredMethod",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Reflection: gets declared method",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/reflect/Method;->invoke",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Invokes method via reflection",
+    "permissions": []
+  },
+  {
+    "signature": "Ldalvik/system/DexClassLoader;-><init>",
+    "category": "evasion",
+    "severity": "high",
+    "description": "Loads DEX file dynamically (common in plugin/malware)",
+    "permissions": []
+  },
+  {
+    "signature": "Ldalvik/system/PathClassLoader;-><init>",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Dynamic class loader from file path",
+    "permissions": []
+  },
+  {
+    "signature": "Ldalvik/system/BaseDexClassLoader;-><init>",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Base class for dynamic DEX loading",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/Runtime;->exec",
+    "category": "evasion",
+    "severity": "high",
+    "description": "Executes shell command",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/ProcessBuilder;->start",
+    "category": "evasion",
+    "severity": "high",
+    "description": "Starts external process",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/os/Parcel;->readValue",
+    "category": "evasion",
+    "severity": "medium",
+    "description": "Parcel deserialization (potential exploit vector)",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/io/ObjectInputStream;->readObject",
+    "category": "evasion",
+    "severity": "high",
+    "description": "Java deserialization (known vulnerability vector)",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/net/URL;->openConnection",
+    "category": "network",
+    "severity": "low",
+    "description": "Opens HTTP connection",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Ljava/net/HttpURLConnection;->connect",
+    "category": "network",
+    "severity": "low",
+    "description": "HTTP connection connect",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lokhttp3/OkHttpClient;->newCall",
+    "category": "network",
+    "severity": "low",
+    "description": "OkHttp network request",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lretrofit2/Retrofit;->create",
+    "category": "network",
+    "severity": "low",
+    "description": "Retrofit API client creation",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/android/volley/RequestQueue;->add",
+    "category": "network",
+    "severity": "low",
+    "description": "Volley HTTP request",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Landroid/webkit/WebView;->loadUrl",
+    "category": "network",
+    "severity": "medium",
+    "description": "WebView loads URL (may load remote JS/tracking)",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Landroid/webkit/WebView;->addJavascriptInterface",
+    "category": "network",
+    "severity": "high",
+    "description": "Exposes Java object to WebView JavaScript (security risk)",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/webkit/WebView;->setWebContentsDebuggingEnabled",
+    "category": "evasion",
+    "severity": "low",
+    "description": "Enables WebView debugging",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/webkit/WebSettings;->setJavaScriptEnabled",
+    "category": "network",
+    "severity": "low",
+    "description": "Enables WebView JavaScript",
+    "permissions": []
+  },
+  {
+    "signature": "Ljavax/net/ssl/SSLSocket;-><init>",
+    "category": "network",
+    "severity": "medium",
+    "description": "Custom SSL socket (may bypass certificate validation)",
+    "permissions": []
+  },
+  {
+    "signature": "Ljavax/net/ssl/TrustManager;->checkServerTrusted",
+    "category": "network",
+    "severity": "high",
+    "description": "Custom TrustManager - potential certificate pinning bypass",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/net/ConnectivityManager;->getActiveNetworkInfo",
+    "category": "network",
+    "severity": "low",
+    "description": "Checks network connectivity status",
+    "permissions": [
+      "ACCESS_NETWORK_STATE"
+    ]
+  },
+  {
+    "signature": "Landroid/net/ConnectivityManager;->getNetworkCapabilities",
+    "category": "network",
+    "severity": "low",
+    "description": "Gets network capabilities (API 21+)",
+    "permissions": [
+      "ACCESS_NETWORK_STATE"
+    ]
+  },
+  {
+    "signature": "Lcom/google/android/gms/ads/AdRequest;->build",
+    "category": "ads",
+    "severity": "low",
+    "description": "Google AdMob: builds ad request",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/google/android/gms/ads/AdView;->loadAd",
+    "category": "ads",
+    "severity": "low",
+    "description": "Google AdMob: loads banner ad",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/google/android/gms/ads/InterstitialAd;->loadAd",
+    "category": "ads",
+    "severity": "low",
+    "description": "Google AdMob: loads interstitial ad",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/facebook/ads/AdView;->loadAd",
+    "category": "ads",
+    "severity": "low",
+    "description": "Facebook Audience Network: loads ad",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/applovin/sdk/AppLovinSdk;->initializeSdk",
+    "category": "ads",
+    "severity": "low",
+    "description": "AppLovin SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/ironsource/sdk/IronSource;->init",
+    "category": "ads",
+    "severity": "low",
+    "description": "IronSource SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/vungle/warren/Vungle;->init",
+    "category": "ads",
+    "severity": "low",
+    "description": "Vungle SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/mobvista/sdk/MIntegralSDK;->init",
+    "category": "ads",
+    "severity": "low",
+    "description": "Mintegral SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/bytedance/sdk/openadsdk/TTAdSdk;->init",
+    "category": "ads",
+    "severity": "low",
+    "description": "穿山甲/Pangle SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/qq/e/ads/AbstractAD;->loadAD",
+    "category": "ads",
+    "severity": "low",
+    "description": "腾讯优量汇/广点通: loads ad",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/baidu/mobads/AdView;->setListener",
+    "category": "ads",
+    "severity": "low",
+    "description": "百度百青藤广告 SDK",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/unity3d/ads/UnityAds;->initialize",
+    "category": "ads",
+    "severity": "low",
+    "description": "Unity Ads initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/chartboost/sdk/Chartboost;->startWithAppId",
+    "category": "ads",
+    "severity": "low",
+    "description": "Chartboost SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/adjust/sdk/Adjust;->onCreate",
+    "category": "tracking",
+    "severity": "medium",
+    "description": "Adjust attribution SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/appsflyer/AppsFlyerLib;->init",
+    "category": "tracking",
+    "severity": "medium",
+    "description": "AppsFlyer attribution SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/umeng/analytics/MobclickAgent;->onResume",
+    "category": "analytics",
+    "severity": "low",
+    "description": "友盟统计: page resume tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/umeng/analytics/MobclickAgent;->onEvent",
+    "category": "analytics",
+    "severity": "low",
+    "description": "友盟统计: event tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/sensorsdata/analytics/SensorsDataAPI;->track",
+    "category": "analytics",
+    "severity": "low",
+    "description": "神策数据: event tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/growingio/android/sdk/track/GrowingTracker;->track",
+    "category": "analytics",
+    "severity": "low",
+    "description": "GrowingIO: event tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/talkingdata/sdk/TCAgent;->init",
+    "category": "analytics",
+    "severity": "low",
+    "description": "TalkingData SDK initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/mixpanel/android/mpmetrics/MixpanelAPI;->track",
+    "category": "analytics",
+    "severity": "low",
+    "description": "Mixpanel event tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/amplitude/api/AmplitudeClient;->logEvent",
+    "category": "analytics",
+    "severity": "low",
+    "description": "Amplitude event tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/flurry/android/FlurryAgent;->onStartSession",
+    "category": "analytics",
+    "severity": "low",
+    "description": "Flurry session tracking",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lio/branch/referral/Branch;->initSession",
+    "category": "tracking",
+    "severity": "medium",
+    "description": "Branch deep linking/attribution",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/kochava/android/tracker/Tracker;->startWithAppGuid",
+    "category": "tracking",
+    "severity": "medium",
+    "description": "Kochava attribution SDK",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/google/firebase/messaging/FirebaseMessaging;->getToken",
+    "category": "push",
+    "severity": "medium",
+    "description": "Firebase Cloud Messaging: gets registration token",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/xiaomi/push/PushMessageReceiver;->onReceivePassThroughMessage",
+    "category": "push",
+    "severity": "low",
+    "description": "小米推送: receives push message",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/huawei/hms/push/HmsMessageService;->onMessageReceived",
+    "category": "push",
+    "severity": "low",
+    "description": "华为推送: receives push message",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcn/jpush/android/api/JPushInterface;->init",
+    "category": "push",
+    "severity": "low",
+    "description": "极光推送 initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Lcom/igexin/sdk/PushManager;->initialize",
+    "category": "push",
+    "severity": "low",
+    "description": "个推 initialization",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Landroid/os/Environment;->getExternalStorageDirectory",
+    "category": "storage",
+    "severity": "medium",
+    "description": "Accesses external storage root (deprecated, privacy concern)",
+    "permissions": [
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE"
+    ]
+  },
+  {
+    "signature": "Landroid/content/Context;->getExternalFilesDir",
+    "category": "storage",
+    "severity": "low",
+    "description": "Accesses app-specific external storage",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/content/SharedPreferences;->edit",
+    "category": "storage",
+    "severity": "low",
+    "description": "Writes to SharedPreferences",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/database/sqlite/SQLiteDatabase;->execSQL",
+    "category": "storage",
+    "severity": "low",
+    "description": "Executes SQL on SQLite database",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/database/sqlite/SQLiteDatabase;->rawQuery",
+    "category": "storage",
+    "severity": "low",
+    "description": "Executes raw SQL query",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/io/File;->listFiles",
+    "category": "storage",
+    "severity": "medium",
+    "description": "Lists files in directory",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/io/FileInputStream;-><init>",
+    "category": "storage",
+    "severity": "low",
+    "description": "Reads file",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/io/FileOutputStream;-><init>",
+    "category": "storage",
+    "severity": "low",
+    "description": "Writes file",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/app/DownloadManager;->enqueue",
+    "category": "network",
+    "severity": "medium",
+    "description": "Downloads file via system DownloadManager",
+    "permissions": [
+      "INTERNET"
+    ]
+  },
+  {
+    "signature": "Landroid/content/pm/PackageManager;->getInstalledPackages",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Lists all installed apps",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/content/pm/PackageManager;->getInstalledApplications",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Lists all installed applications",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/app/ActivityManager;->getRunningAppProcesses",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Lists running app processes",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/app/ActivityManager;->getRunningTasks",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Lists running tasks (deprecated, privacy sensitive)",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/app/usage/UsageStatsManager;->queryUsageStats",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Queries app usage statistics",
+    "permissions": [
+      "PACKAGE_USAGE_STATS"
+    ]
+  },
+  {
+    "signature": "Landroid/app/usage/UsageStatsManager;->queryEvents",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Queries detailed usage events",
+    "permissions": [
+      "PACKAGE_USAGE_STATS"
+    ]
+  },
+  {
+    "signature": "Landroid/hardware/SensorManager;->getDefaultSensor",
+    "category": "privacy",
+    "severity": "low",
+    "description": "Accesses device sensors (accelerometer, gyroscope, etc.)",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/hardware/SensorManager;->registerListener",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Registers sensor listener (continuous data)",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/hardware/fingerprint/FingerprintManager;->authenticate",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Fingerprint authentication",
+    "permissions": [
+      "USE_FINGERPRINT"
+    ]
+  },
+  {
+    "signature": "Landroid/hardware/biometrics/BiometricPrompt;->authenticate",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Biometric authentication (API 28+)",
+    "permissions": [
+      "USE_BIOMETRIC"
+    ]
+  },
+  {
+    "signature": "Landroid/accounts/AccountManager;->getAccounts",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Gets device accounts (Google, etc.)",
+    "permissions": [
+      "GET_ACCOUNTS"
+    ]
+  },
+  {
+    "signature": "Landroid/accounts/AccountManager;->getAccountsByType",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Gets accounts by type",
+    "permissions": [
+      "GET_ACCOUNTS"
+    ]
+  },
+  {
+    "signature": "Landroid/accounts/AccountManager;->addAccountExplicitly",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Adds account to device",
+    "permissions": [
+      "AUTHENTICATE_ACCOUNTS"
+    ]
+  },
+  {
+    "signature": "Landroid/content/ClipboardManager;->getPrimaryClip",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Reads clipboard content",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/content/ClipboardManager;->setPrimaryClip",
+    "category": "privacy",
+    "severity": "medium",
+    "description": "Writes to clipboard",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/content/ClipboardManager;->addPrimaryClipChangedListener",
+    "category": "privacy",
+    "severity": "high",
+    "description": "Listens for clipboard changes (keylogger-like behavior)",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/System;->loadLibrary",
+    "category": "native",
+    "severity": "medium",
+    "description": "Loads native library (.so)",
+    "permissions": []
+  },
+  {
+    "signature": "Ljava/lang/System;->load",
+    "category": "native",
+    "severity": "medium",
+    "description": "Loads native library from path",
+    "permissions": []
+  },
+  {
+    "signature": "Landroid/content/pm/PackageManager;->getApplicationInfo",
+    "category": "native",
+    "severity": "low",
+    "description": "Gets app info including native library dir",
+    "permissions": []
+  }
+]
