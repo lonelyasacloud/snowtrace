@@ -27,21 +27,19 @@
 
 ## Quick Start
 
-依赖：`androguard`（`pip install androguard`）+ 自备指纹库。
+依赖：`androguard`（`pip install androguard`）。仓库自带白名单指纹（`data/whitelist/common_sdks.json`），clone 下来即可扫描：
 
 ```bash
-python scan.py /path/to/app.apk \
-  --db sdklib.db \
-  --whitelist common_sdks.json
+python scan.py /path/to/app.apk
 ```
 
-指纹库通过三种方式解析（优先级从高到低）：
+SDK 指纹库 DB（sqlite：`sdks(name, vendor, category, package_prefixes)` 表）是**可选增强**——提供后 SDK 召回率大幅提升；缺失时仅用白名单指纹，报告中会注明。DB 通过三种方式解析（优先级从高到低）：
 
 1. `--db` / `--whitelist` 显式传入；
 2. 环境变量 `SNOWTRACE_SDK_DB` / `SNOWTRACE_WHITELIST`；
 3. 仓库内 `data/sdklib.db` 与 `data/whitelist/common_sdks.json`。
 
-> **指纹库说明**：SDK 指纹库（sqlite：`sdks(name, vendor, category, package_prefixes)` 表 + JSON 白名单：`name/vendor/category/packages/strings`）目前由使用者自备；项目自带的指纹数据整理完毕后会在本仓库放出。
+> **指纹库说明**：仓库自带 `data/whitelist/common_sdks.json`（人工精修白名单，含包名前缀/字符串/权限/数据类型信号）；完整指纹库 DB 整理完毕后会在本仓库放出。
 
 ## 准确率（ground truth 回归）
 

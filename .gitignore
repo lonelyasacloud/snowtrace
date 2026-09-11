@@ -1,5 +1,5 @@
 *.apk
 reports/
-data/
+data/sdklib.db
 __pycache__/
 .DS_Store

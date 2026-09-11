@@ -1,0 +1,32 @@
+[
+  {
+    "sdk_id": "google-admob",
+    "name": "Google AdMob",
+    "vendor": "Google",
+    "category": "ads",
+    "status": "compliant",
+    "regions": ["global"],
+    "packages": ["com.google.android.gms.ads"],
+    "apis": [
+      "Landroid/content/Context;->getSystemService",
+      "Landroid/view/View;->getContext",
+      "Landroid/app/Activity;->getWindowManager",
+      "Landroid/net/ConnectivityManager;->getActiveNetworkInfo",
+      "Landroid/location/LocationManager;->getLastKnownLocation",
+      "Landroid/provider/Settings$Secure;->getString"
+    ],
+    "strings": [
+      "https://googleads.g.doubleclick.net",
+      "admob",
+      "ca-app-pub-",
+      "AdMob",
+      "google.com",
+      "ads"
+    ],
+    "permissions": [
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE"
+    ],
+    "data_types": ["pii_device_id", "location"]
+  }
+]
