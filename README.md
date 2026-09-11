@@ -62,3 +62,7 @@ python scan.py /path/to/app.apk \
 
 对标 Kaamel（App 隐私合规自动化）的事实层：先让「APK 里到底有什么」变得可复现、可审计，
 合规判定、评分、整改建议都建立在证据之上。
+
+## License
+
+[MIT](LICENSE)
