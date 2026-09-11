@@ -38,6 +38,7 @@ DEFAULT_DB = os.environ.get("SNOWTRACE_SDK_DB") or (
 DEFAULT_WHITELIST = os.environ.get("SNOWTRACE_WHITELIST") or (
     _LOCAL_WHITELIST if Path(_LOCAL_WHITELIST).exists() else str(_REPO_DATA / "whitelist" / "common_sdks.json")
 )
+DEFAULT_API_RULES = os.environ.get("SNOWTRACE_API_RULES") or str(_REPO_DATA / "api_rules.json")
 
 # ── 原生库名 → SDK 映射（人工维护的小表，证据 = .so 文件名本身）────────────
 NATIVE_LIB_TABLE = {
@@ -269,6 +270,93 @@ def dedup_by_prefix(matches: dict) -> list[dict]:
     return final
 
 
+def load_api_rules(rules_path: str) -> dict[str, dict]:
+    """加载敏感 API 规则（data/api_rules.json），返回 {signature: rule}。"""
+    p = Path(rules_path)
+    if not p.exists():
+        return {}
+    rules = json.loads(p.read_text())
+    return {r["signature"]: r for r in rules}
+
+
+# invoke-* 指令（方法调用）与 xget/xput 系列（字段访问，覆盖 Build.SERIAL 这类字段规则）
+_INVOKE_PREFIX = "invoke-"
+_FIELD_OPS = {"sget", "iget", "sput", "iput"}
+
+
+def analyze_api_calls(dex_names: list[str], apk, rules: dict[str, dict],
+                      permissions: list[str]) -> list[dict]:
+    """逐条指令扫描 dex，统计规则命中：调用次数 + 调用方样例 + 相关权限声明对照。
+
+    事实层语义：call_count 是「dex 中的调用点数量」，不等于运行时执行次数；
+    混淆/反射/JNI 可能隐藏真实调用。
+    """
+    if not rules:
+        return []
+    declared = set(permissions)
+    from androguard.core.dex import DEX
+
+    counts: dict[str, int] = {}
+    callers: dict[str, list[str]] = {}
+
+    for dname in dex_names:
+        try:
+            d = DEX(apk.get_file(dname))
+        except Exception as e:
+            print(f"[warn] 解析 {dname} 失败: {e}", file=sys.stderr)
+            continue
+        methods_idx = d.get_methods()
+        fields_idx = d.get_fields()
+        for cls in d.get_classes():
+            for m in cls.get_methods():
+                code = m.get_code()
+                if not code:
+                    continue
+                caller = f"{cls.get_name()}->{m.get_name()}"
+                for ins in code.get_bc().get_instructions():
+                    name = ins.get_name()
+                    if name.startswith(_INVOKE_PREFIX):
+                        table = methods_idx
+                    elif name.split("-", 1)[0] in _FIELD_OPS:
+                        table = fields_idx
+                    else:
+                        continue
+                    try:
+                        item = table[ins.get_ref_kind()]
+                        sig = f"{item.get_class_name()}->{item.get_name()}"
+                    except Exception:
+                        continue
+                    rule = rules.get(sig)
+                    if rule is None:
+                        continue
+                    counts[sig] = counts.get(sig, 0) + 1
+                    if sig not in callers:
+                        callers[sig] = []
+                    if len(callers[sig]) < 3 and caller not in callers[sig]:
+                        callers[sig].append(caller)
+
+    findings = []
+    for sig, rule in rules.items():
+        if sig not in counts:
+            continue
+        related = rule.get("permissions", [])
+        findings.append({
+            "signature": sig,
+            "category": rule.get("category", ""),
+            "severity": rule.get("severity", ""),
+            "description": rule.get("description", ""),
+            "call_count": counts[sig],
+            "sample_callers": callers.get(sig, []),
+            "related_permissions": related,
+            "related_permissions_declared": [p for p in related
+                                             if f"android.permission.{p}" in declared],
+            "evidence": f"dex 调用点 {counts[sig]} 处",
+        })
+    findings.sort(key=lambda f: ({"high": 0, "medium": 1, "low": 2}.get(f["severity"], 3),
+                                 -f["call_count"]))
+    return findings
+
+
 def match_native_libs(so_files: list[str]) -> list[dict]:
     hits = []
     for so in so_files:
@@ -343,7 +431,7 @@ def _to_int(value) -> int | None:
         return None
 
 
-def scan(apk_path: str, db_path: str, whitelist_path: str) -> dict:
+def scan(apk_path: str, db_path: str, whitelist_path: str, api_rules_path: str = "") -> dict:
     from androguard.core.apk import APK
     from androguard.core.dex import DEX
 
@@ -370,6 +458,7 @@ def scan(apk_path: str, db_path: str, whitelist_path: str) -> dict:
         "native_findings": [],
         "limitations": [
             "仅做静态特征匹配：dex 类名前缀、原生库文件名、字符串。不检测动态加载（DexClassLoader 下载代码）、JNI 反射调用。",
+            "API 调用面为静态调用点统计：call_count 是 dex 中的调用点数量，不等于运行时执行次数；混淆、反射、JNI 可能隐藏真实调用。",
             "短前缀（1-2 段包名）命中为「推断」级，可能与 App 自身代码混淆重名，需人工复核样例类名。",
             "报告只陈述事实，不做合规判定；SDK 是否违规取决于其版本、配置与使用方式。",
             "扫描名单遵循隔离原则：不扫描在职雇主同赛道竞对产品。",
@@ -444,6 +533,10 @@ def scan(apk_path: str, db_path: str, whitelist_path: str) -> dict:
         print(f"[warn] 字符串提取失败: {e}", file=sys.stderr)
     report["string_findings"] = string_findings
 
+    # 5. 敏感 API 调用面（v0.3：从「SDK 在场」到「在调什么」）
+    report["api_findings"] = analyze_api_calls(dex_names, apk, load_api_rules(api_rules_path),
+                                               report["permissions"])
+
     return report
 
 
@@ -488,7 +581,7 @@ def emit_pcc_static(r: dict) -> dict:
         })
     payload = {
         "tool": "snowtrace",
-        "tool_version": "0.2",
+        "tool_version": "0.3",
         "package_name": r["package"],
         "version_name": r.get("version_name") or "",
         "version_code": _to_int(r.get("version_code")) or 0,
@@ -528,7 +621,8 @@ def render_markdown(r: dict) -> str:
     lines.append(f"# 隐私体检报告（事实层 · P0）\n")
     lines.append(f"**被测应用**：`{r['package']}` v{r['version_name']} (versionCode {r['version_code']})")
     lines.append(f"**文件**：`{Path(r['apk']).name}`")
-    lines.append(f"**dex 文件数**：{len(r['dex_files'])}　**类总数**：{r['total_classes']:,}　**原生库数**：{r['native_lib_count']}")
+    lines.append(f"**dex 文件数**：{len(r['dex_files'])}　**类总数**：{r['total_classes']:,}　**原生库数**：{r['native_lib_count']}"
+                 + (f"　**敏感 API 命中**：{len(r.get('api_findings', []))} 类签名" if r.get("api_findings") else ""))
     lines.append(f"**minSdk / targetSdk**：{r['min_sdk']} / {r['target_sdk']}")
     lines.append(f"**组件**：Activity {r['components']['activities']} · Service {r['components']['services']} · Receiver {r['components']['receivers']} · Provider {r['components']['providers']}\n")
     mf = r.get("manifest_flags", {})
@@ -568,12 +662,21 @@ def render_markdown(r: dict) -> str:
         for f in r["native_findings"]:
             lines.append(f"| {f['confidence']} | {f['name']} | {f['vendor']} | {f['evidence']} |")
         lines.append("")
-    lines.append(f"## 三、权限清单（{len(r['permissions'])} 项，仅陈述）\n")
+    if r.get("api_findings"):
+        lines.append("## 三、敏感 API 调用面（指令级静态检测）\n")
+        lines.append("| 严重度 | 敏感 API 签名 | 分类 | 调用点 | 调用方样例 |")
+        lines.append("|---|---|---|---|---|")
+        for f in r["api_findings"]:
+            callers = "<br>".join(f"`{c}`" for c in f["sample_callers"])
+            lines.append(f"| {f['severity']} | `{f['signature']}` | {f['category']} "
+                         f"| {f['call_count']} | {callers} |")
+        lines.append("\n\\* 调用点为 dex 指令级静态计数，代表「代码里会走到这里」，不等于运行时实际执行次数或真实数据流向。\n")
+    lines.append(f"## {'四' if r.get('api_findings') else '三'}、权限清单（{len(r['permissions'])} 项，仅陈述）\n")
     for p in r["permissions"]:
         lines.append(f"- `{p}`")
     lines.append("")
     if r.get("string_findings"):
-        lines.append(f"## 四、字符串线索（白名单常量精确匹配，{len(r['string_findings'])} 项，推断级）\n")
+        lines.append(f"## {'五' if r.get('api_findings') else '四'}、字符串线索（白名单常量精确匹配，{len(r['string_findings'])} 项，推断级）\n")
         lines.append("| SDK | 厂商 | 证据 |")
         lines.append("|---|---|---|")
         for f in r["string_findings"]:
@@ -592,12 +695,14 @@ def main():
     ap.add_argument("apk")
     ap.add_argument("--db", default=DEFAULT_DB)
     ap.add_argument("--whitelist", default=DEFAULT_WHITELIST)
+    ap.add_argument("--api-rules", default=DEFAULT_API_RULES,
+                    help="敏感 API 签名规则 JSON（默认取仓库 data/api_rules.json）")
     ap.add_argument("--out-dir", default=str(Path(__file__).parent / "reports"))
     ap.add_argument("--pcc", action=argparse.BooleanOptionalAction, default=True,
                     help="同时输出 PCC android_static 导入格式（默认开启，--no-pcc 关闭）")
     args = ap.parse_args()
 
-    report = scan(args.apk, args.db, args.whitelist)
+    report = scan(args.apk, args.db, args.whitelist, args.api_rules)
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
