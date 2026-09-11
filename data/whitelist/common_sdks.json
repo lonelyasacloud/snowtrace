@@ -28,5 +28,116 @@
       "android.permission.ACCESS_NETWORK_STATE"
     ],
     "data_types": ["pii_device_id", "location"]
+  },
+  {
+    "sdk_id": "firebase-analytics",
+    "name": "Firebase Analytics",
+    "vendor": "Google",
+    "category": "analytics",
+    "status": "compliant",
+    "regions": ["global"],
+    "packages": ["com.google.firebase.analytics"],
+    "apis": [
+      "Landroid/content/Context;->getPackageName",
+      "Landroid/os/Bundle;->putString",
+      "Landroid/content/SharedPreferences;->edit",
+      "Landroid/app/Application;->registerActivityLifecycleCallbacks",
+      "Landroid/provider/Settings$Secure;->getString"
+    ],
+    "strings": [
+      "firebase_analytics",
+      "google-analytics",
+      "firebase.googleapis.com",
+      "firebase",
+      "ga_trackingId"
+    ],
+    "permissions": [
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE"
+    ],
+    "data_types": ["pii_device_id"]
+  },
+  {
+    "sdk_id": "umeng-analytics",
+    "name": "友盟统计",
+    "vendor": "阿里巴巴",
+    "category": "analytics",
+    "status": "compliant",
+    "regions": ["global", "cn"],
+    "packages": ["com.umeng.analytics"],
+    "apis": [
+      "Landroid/telephony/TelephonyManager;->getDeviceId",
+      "Landroid/net/wifi/WifiInfo;->getMacAddress",
+      "Landroid/content/Context;->getSystemService",
+      "Landroid/location/LocationManager;->getLastKnownLocation",
+      "Landroid/app/Activity;->getPackageManager",
+      "Landroid/content/pm/PackageManager;->getPackageInfo"
+    ],
+    "strings": [
+      "https://alog.umeng.com",
+      "umeng",
+      "MobclickAgent",
+      "umeng_common",
+      "umeng_share"
+    ],
+    "permissions": [
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE",
+      "android.permission.READ_PHONE_STATE"
+    ],
+    "data_types": ["pii_device_id", "network"]
+  },
+  {
+    "sdk_id": "wechat-sdk",
+    "name": "微信SDK",
+    "vendor": "腾讯",
+    "category": "social",
+    "status": "compliant",
+    "regions": ["global", "cn"],
+    "packages": ["com.tencent.mm.opensdk"],
+    "apis": [
+      "Landroid/content/Intent;->setAction",
+      "Landroid/content/pm/PackageManager;->queryIntentActivities",
+      "Landroid/app/Activity;->startActivityForResult",
+      "Landroid/content/ContentResolver;->query",
+      "Landroid/graphics/BitmapFactory;->decodeFile"
+    ],
+    "strings": [
+      "wechat",
+      "wxapi",
+      "tencent",
+      "wx",
+      "weixin",
+      "com.tencent.mm"
+    ],
+    "permissions": [
+      "android.permission.INTERNET"
+    ],
+    "data_types": []
+  },
+  {
+    "sdk_id": "alipay-sdk",
+    "name": "支付宝SDK",
+    "vendor": "蚂蚁集团",
+    "category": "payment",
+    "status": "compliant",
+    "regions": ["cn"],
+    "packages": ["com.alipay.sdk"],
+    "apis": [
+      "Landroid/content/Intent;->setClass",
+      "Landroid/app/Activity;->startActivity",
+      "Landroid/webkit/WebView;->loadUrl",
+      "Landroid/content/Context;->getPackageName"
+    ],
+    "strings": [
+      "alipay",
+      "alipay.com",
+      "支付宝",
+      "alipays://"
+    ],
+    "permissions": [
+      "android.permission.INTERNET"
+    ],
+    "data_types": []
   }
 ]
