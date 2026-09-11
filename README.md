@@ -21,9 +21,13 @@
 
 | 文件 | 用途 |
 |---|---|
-| `<apk>.md` | 人读报告：Manifest 安全标志、组件 exported 统计、SDK 发现表（含样例类名证据）、权限清单 |
+| `<apk>.md` | 人读报告：Manifest 安全标志、组件 exported 统计、SDK 发现表（含样例类名证据）、**敏感 API 调用面**（v0.3 起）、权限清单 |
 | `<apk>.json` | 完整结构化事实数据 |
 | `<apk>.pcc.json` | **PCC `android_static` 导入格式**：可直接喂给下游隐私合规引擎（SDK 指纹命中明细 + exported 组件计数 + 危险权限信号），打通「扫 APK → 进合规引擎 → 出评分报告」流水线 |
+
+**v0.3 敏感 API 调用面**：除「SDK 在场」外，逐条指令扫描 dex，检测 113 条敏感 API 签名规则
+（`data/api_rules.json`，含 category / severity / 关联权限），输出每个签名的静态调用点数与调用方样例。
+`call_count` 是调用点计数，不等于运行时执行次数。规则文件仓库自带，`--api-rules` 可替换。
 
 ## Quick Start
 
@@ -60,7 +64,3 @@ SDK 指纹库 DB（sqlite：`sdks(name, vendor, category, package_prefixes)` 表
 
 对标 Kaamel（App 隐私合规自动化）的事实层：先让「APK 里到底有什么」变得可复现、可审计，
 合规判定、评分、整改建议都建立在证据之上。
-
-## License
-
-[MIT](LICENSE)
