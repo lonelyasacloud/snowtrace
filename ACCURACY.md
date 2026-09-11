@@ -57,3 +57,33 @@
 - 不检测动态加载（DexClassLoader 下载代码）、JNI/反射调用。
 - 指纹库覆盖决定召回：DB 3316 条中 2079 条有可用前缀；漏报靠补指纹解决，不靠放松匹配规则。
 - 「确定」只说明类名证据确凿，不代表 SDK 被实际调用（静态事实 ≠ 运行时行为）。
+
+---
+
+## v0.3 增量：敏感 API 调用面（指令级静态检测）
+
+日期：2026-09-11
+规则源：`data/api_rules.json`（113 条 Smali 签名规则，来自 SDK-Library `build_api_fingerprints.py`，
+分类 category / 严重度 severity / 关联权限 permissions 全量保留）
+样本：同 `antennapod_3.11.4.apk`，全量扫描约 9 秒（含 3 个 dex 全指令迭代）
+
+**SDK 基线无退化**：确定 4 + 推断 5、原生库 0，与 v0.2 完全一致。
+
+**API 层命中 31 条签名**，作为 v0.3 回归基线：
+
+| 严重度 | 命中数 | 亮点条目（调用点 / 调用方样例均可溯） |
+|---|---|---|
+| high | 4 | `ObjectInputStream->readObject` x3、`Settings$Secure->getString` x1、`LocationManager->getLastKnownLocation` x1、`Runtime->exec` x1 |
+| medium | 14 | 反射族（`Method->invoke` x141、`Class->forName` x79 等）、`ContentResolver->query` x10、`ClipboardManager` 读写 x12 |
+| low | 13 | `SharedPreferences->edit` x123、`SQLiteDatabase->execSQL` x103、网络族（okhttp/URL/ConnectivityManager） |
+
+**基线语义约定**：`call_count` 是 dex 指令级静态调用点数量，代表「代码里会走到这里」，
+不等于运行时实际执行次数，也不证明真实数据流向；反射 / JNI / 动态加载可隐藏真实调用。
+
+**真值抽查（抽样人工核对，全部成立）**：
+- `Settings$Secure->getString` 调用方为 `NotificationManagerCompat->getEnabledListenerPackages`（androidx，读 enabled_notification_listeners 设置）✅ 合理；
+- `LocationManager->getLastKnownLocation` 调用方为 `TwilightManager`（androidx appcompat 昼夜主题）✅ 合理；
+- 无 `TelephonyManager->getDeviceId` 命中 ✅ 与开源应用无设备指纹行为一致。
+
+**未接入项（刻意不做，待契约确认）**：API 命中暂不进 `.pcc.json` 的 `android_static` payload——
+PCC `normalize_static_json` 对未知字段的容忍度未验证，先不喂，避免下游导入报错。
