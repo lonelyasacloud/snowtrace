@@ -111,8 +111,13 @@ MIN_SEGMENTS = 3  # 少于 3 段且不在白名单内的前缀不用于正向归
 
 
 def load_fingerprints(db_path: str, whitelist_path: str) -> list[dict]:
-    """从 sdklib.db + 白名单 JSON 加载指纹，按规范化名称去重合并。"""
+    """从 sdklib.db + 白名单 JSON 加载指纹，按规范化名称去重合并。
+
+    指纹库 DB 是可选增强：缺失时仅用白名单 JSON 的指纹继续扫描，
+    召回率下降但流程不中断（报告 limitation 里会注明）。
+    """
     by_name: dict[str, dict] = {}
+    db_loaded = False
 
     def add_entry(name, vendor, category, prefixes, source_id, strings=None):
         key = re.sub(r"\s+", " ", name.strip().lower())
@@ -135,16 +140,19 @@ def load_fingerprints(db_path: str, whitelist_path: str) -> list[dict]:
                 ent["strings"].add(s)
         ent["sources"].add(source_id)
 
-    db = sqlite3.connect(db_path)
-    cur = db.cursor()
-    for name, vendor, cat, prefixes in cur.execute(
-        "SELECT name, vendor, category, package_prefixes FROM sdks"
-    ):
-        try:
-            plist = json.loads(prefixes) if prefixes else []
-        except Exception:
-            continue
-        add_entry(name, vendor, cat, plist, f"sdklib.db:{name}")
+    if db_path and Path(db_path).exists():
+        db = sqlite3.connect(db_path)
+        cur = db.cursor()
+        for name, vendor, cat, prefixes in cur.execute(
+            "SELECT name, vendor, category, package_prefixes FROM sdks"
+        ):
+            try:
+                plist = json.loads(prefixes) if prefixes else []
+            except Exception:
+                continue
+            add_entry(name, vendor, cat, plist, f"sdklib.db:{name}")
+        db.close()
+        db_loaded = True
 
     if Path(whitelist_path).exists():
         wl = json.loads(Path(whitelist_path).read_text())
@@ -154,7 +162,11 @@ def load_fingerprints(db_path: str, whitelist_path: str) -> list[dict]:
                       strings=item.get("strings"))
 
     # 丢弃既无前缀又无字符串的条目
-    return [e for e in by_name.values() if e["prefixes"] or e["strings"]]
+    entries = [e for e in by_name.values() if e["prefixes"] or e["strings"]]
+    if not db_loaded:
+        print(f"[warn] 指纹库 DB 未加载（{db_path or '未指定'}），仅使用白名单指纹，召回率有限",
+              file=sys.stderr)
+    return entries
 
 
 def all_segments(prefix: str) -> int:
@@ -379,6 +391,9 @@ def scan(apk_path: str, db_path: str, whitelist_path: str) -> dict:
 
     # 2. 加载指纹并匹配 + 同前缀多主张合并
     fingerprints = load_fingerprints(db_path, whitelist_path)
+    if not (db_path and Path(db_path).exists()):
+        report["limitations"].append(
+            f"指纹库 DB 未加载（{db_path or '未指定'}），仅使用白名单指纹，SDK 召回率有限。")
     matches = dedup_by_prefix(match_prefixes(classes, fingerprints))
 
     findings = []
